@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-type MagaF interface {
+type MagaF struct {
 	Mf
 }
 
