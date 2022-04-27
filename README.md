@@ -1,2 +1,2 @@
 # fineOS
-a kernel on arm platform
+just a kernel
