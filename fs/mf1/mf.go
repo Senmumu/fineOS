@@ -4,6 +4,7 @@ import (
 	"errors"
 	"io"
 	"os"
+	"time"
 )
 
 type MagaF struct {
@@ -19,33 +20,34 @@ var (
 )
 
 type MfFile interface {
-	io.Closer
+	io.Seeker
 	io.Reader
 	io.ReaderAt
-	io.Seeker
 	io.Writer
 	io.WriterAt
+	io.Closer
 
 	Name() string
-	ReadDir(count int) ([]os.FileInfo, error)
-	ReadDirNames(n int) ([]string, error)
+	Readdir(count int) ([]os.FileInfo, error)
+	Readdirnames(n int) ([]string, error)
 	Stat() (os.FileInfo, error)
 	Sync() error
-	Truncate(size uint64) error
+	Truncate(size int64) error
 	WriteString(s string) (returnInfo int, err error)
 }
 
 type Mf interface {
 	Create(name string) (MfFile, error)
-	MakeDir(name string, mode os.FileMode) error
-	MakeDirAll(path string)
-	Open(name string, mode os.FileMode) (err error)
-	OpenFile(name string, mode os.FileMode) error
+	Mkdir(name string, mode os.FileMode) error
+	MkdirAll(path string, mode os.FileMode) error
+	Open(name string) (MfFile, error)
+	OpenFile(name string, flag int, mode os.FileMode) (MfFile, error)
 	Remove(name string) error
 	RemoveAll(path string) error
 	Rename(oldname string, newName string) error
-	Stat(name string) (os.FileInfo, os.FileInfo)
+	Stat(name string) (os.FileInfo, error)
 	Name() string
-	ChangeMode(name string, mode os.FileMode) error
-	ChangeOwn(name string, userId, groupId int) error
+	Chmod(name string, mode os.FileMode) error
+	Chown(name string, userId, groupId int) error
+	Chtimes(name string, appendTime time.Time, modifyTime time.Time) error
 }

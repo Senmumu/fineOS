@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-var _ LastStater = (*MfOs)(nil)
+var _ Lstater = (*MfOs)(nil)
 
 func NewMfOs() Mf {
 	return &MfOs{}
@@ -19,18 +19,18 @@ func (MfOs) Name() string {
 }
 
 func (MfOs) Create(name string) (MfFile, error) {
-	file, e := os.Create(name)
+	file, err := os.Create(name)
 	if file == nil {
-		return nil, e
+		return nil, err
 	}
-	return file, e
+	return file, err
 }
-func MakeDir(name string, permition os.FileMode) error {
-	return os.Mkdir(name, permition)
+func (MfOs) Mkdir(name string, mode os.FileMode) error {
+	return os.Mkdir(name, mode)
 }
 
-func (MfOs) MakeDirAll(path string, permition os.FileMode) error {
-	return os.MkdirAll(path, permition)
+func (MfOs) MkdirAll(path string, mode os.FileMode) error {
+	return os.MkdirAll(path, mode)
 }
 
 func (MfOs) Open(name string) (MfFile, error) {
@@ -41,8 +41,8 @@ func (MfOs) Open(name string) (MfFile, error) {
 	return file, err
 }
 
-func OpenFile(name string, flag int, permition os.FileMode) (File, error) {
-	file, err := os.OpenFile(name, flag, permition)
+func (MfOs) OpenFile(name string, flag int, mode os.FileMode) (MfFile, error) {
+	file, err := os.OpenFile(name, flag, mode)
 	if file == nil {
 		return nil, err
 	}
@@ -52,6 +52,9 @@ func OpenFile(name string, flag int, permition os.FileMode) (File, error) {
 func (MfOs) Remove(name string) error {
 	return os.Remove(name)
 }
+func (MfOs) RemoveAll(name string) error {
+	return os.RemoveAll(name)
+}
 
 func (MfOs) Rename(oldName, newName string) error {
 	return os.Rename(oldName, newName)
@@ -60,27 +63,27 @@ func (MfOs) Rename(oldName, newName string) error {
 func (MfOs) Stat(name string) (os.FileInfo, error) {
 	return os.Stat(name)
 }
-func (MfOs) ChangeOwn(name string, userId, groupId int) error {
+func (MfOs) Chown(name string, userId, groupId int) error {
 	return os.Chown(name, userId, groupId)
 }
 
-func (MfOs) ChangeMode(name string, mode os.FileMode) error {
+func (MfOs) Chmod(name string, mode os.FileMode) error {
 	return os.Chmod(name, mode)
 }
 
-func (MfOs) ChangeTimes(name string, appendTime time.Time, modifyTime time.Time) error {
+func (MfOs) Chtimes(name string, appendTime time.Time, modifyTime time.Time) error {
 	return os.Chtimes(name, appendTime, modifyTime)
 }
 
-func (MfOs) LastStatIfPossible(name string) (os.FileInfo, bool, error) {
+func (MfOs) LstatTry(name string) (os.FileInfo, bool, error) {
 	fileInfo, err := os.Lstat(name)
 	return fileInfo, true, err
 }
 
-func (MfOs) SymbliclinkIfPossible(oldName, newName string) error {
+func (MfOs) SymbliclinkTry(oldName, newName string) error {
 	return os.Symlink(oldName, newName)
 }
 
-func (MfOs) ReadLinkIfPossible(name string) (string, error) {
+func (MfOs) ReadLinkTry(name string) (string, error) {
 	return os.Readlink(name)
 }
