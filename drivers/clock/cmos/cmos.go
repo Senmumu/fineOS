@@ -1,6 +1,10 @@
 package clock
 
-import "time"
+import (
+	"time"
+
+	"fineos.cc/fineos/v1/kernel/sys"
+)
 
 type Cmos struct {
 	Second     int
